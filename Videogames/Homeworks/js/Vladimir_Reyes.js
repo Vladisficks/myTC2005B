@@ -14,7 +14,7 @@ function firstNonRepeating(string) {
     }
 
     for (const char in frequency) {
-        if (frequency[char] == 1) return char
+        if (frequency[char] === 1) return char
     }
 }
 
@@ -70,7 +70,7 @@ function capitalize(string) {
 
 // MCD
 function mcd(a, b) {
-    return (b == 0) ? a : mcd(b, a % b); // Algortimo euclidiano
+    return (b === 0) ? a : mcd(b, a % b); // Algortimo euclidiano
 }
 
 // Hacker Speak
@@ -125,7 +125,7 @@ function findShortestString(arr) {
 // Is Palindrome?
 function isPalindrome(string) {
     let palindrome = string.split("").reverse().join("");
-    return palindrome.toLowerCase() == string.toLowerCase() ? true : false;
+    return palindrome.toLowerCase() === string.toLowerCase() ? true : false;
 }
 
 // Sort Strings
