@@ -1,0 +1,198 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    overflow-x: hidden;
+    font-family: Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif;
+}
+
+/* HEADER */
+.header{
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    background-color: rgba(30, 30, 30, 0.8);
+}
+
+.header a{
+    color: white;
+    text-decoration: none;
+    font-size: 150%;
+}
+
+.nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 60px;
+}
+
+.nav a{ margin-right: 25px; }
+
+.lang{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.lang-option{ cursor: pointer; }
+
+.lang-option img{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+/* HERO */
+.hero{
+    height: 100vh;
+    width: 100%;
+    position: relative;
+}
+
+.hero::after{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+}
+
+.hero img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-text{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+    font-size: 125%;
+    z-index: 2;
+}
+
+.highlight{color: #bb8164;}
+
+h1{
+    color: #965838;
+    font-size: 600%;
+}
+
+/* Presentación */
+.presentation{
+    display: flex;
+    align-items: center;
+    text-align: center;
+    background-color: rgb(216, 153, 114);
+}
+
+.presentation p{
+    font-size: 1.5em;
+    padding: 0 3em;
+    color: white;
+}
+
+/* Seccion Gatos */
+.gititos-title{
+    text-align: center;
+    font-size: 4em;
+    margin: 0.8em 0;
+    color: #965838;
+}
+
+.gatos{
+    display: flex;
+    justify-content: center;
+    gap: 2em;
+    flex-wrap: wrap;
+    margin: 2em auto;
+    max-width: 1200px;
+    padding: 1em;
+}
+
+.gato{
+    background: #edc9a7;
+    border-radius: 10px;
+    padding: 1em;
+    margin: 0.5em;
+    text-align: center;
+    flex: 0 0 27%;
+}
+
+@media (max-width: 1000px){
+    .gato{ flex: 0 0 60%; }
+}
+
+.gato img{
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 0.5em;
+}
+
+.gato h3{
+    font-size: 3em;
+    margin-bottom: 0.3em;
+    color: #bb8164;
+}
+
+.gato p{
+    font-size: 1.2em;
+    margin: 0.2em 0;
+}
+
+/* Gif */
+.gif{
+    text-align: center;
+    background-color: #bb8164;
+}
+
+.gif h2{
+    color: white;
+    font-size: 3.5em;
+}
+
+.gif img{
+    width: 200px;
+    height: 200px;
+}
+
+.oiia-cat{ cursor: pointer; }
+
+/* Reservación */
+.reservation{
+    background-color: #965838;
+    display: flex;
+    justify-content: space-evenly;
+    padding: 0.5em;
+    font-size: 1.5em;
+}
+
+h2{
+    color: white;
+}
+
+.button{
+    display: block;
+    background-color: #bb8164;
+    color: white;
+    border: none;
+    font-size: 2rem;
+    border-radius: 0.75em;
+    width: 15rem;
+    box-sizing: border-box;
+    cursor: pointer;
+}
