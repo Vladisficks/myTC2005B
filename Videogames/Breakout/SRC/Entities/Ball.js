@@ -1,10 +1,11 @@
+import { GAME_HEIGHT, GAME_WIDTH } from "../Utils/Constants.js";
 import Vector from "../Utils/Vector.js";
 import GameObject from "./GameObject.js";
 
 export default class Ball extends GameObject {
-    constructor(gameWidth, gameHeight) {
-        const x = gameWidth / 2;
-        const y = gameHeight / 3;
+    constructor() {
+        const x = GAME_WIDTH / 2;
+        const y = GAME_HEIGHT / 3;
 
         super(new Vector(x, y), 30, 30, "#ffffff", "Ball")
 
@@ -24,5 +25,10 @@ export default class Ball extends GameObject {
         let angleDegrees = Math.random() * (120 - 60) + 60;
         let angle = angleDegrees * Math.PI / 180;
         this.velocity = new Vector(Math.cos(angle), Math.sin(angle)).times(this.initialSpeed);
+    }
+
+    resetBall(){
+        this.position = new Vector(GAME_WIDTH / 2, GAME_HEIGHT / 3);
+        this.randomVelocity();
     }
 }
