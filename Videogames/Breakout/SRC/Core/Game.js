@@ -14,8 +14,10 @@ export default class Game {
         this.renderer = new Renderer(canvas);
         this.input = new InputManager();
         this.levelManager = new LevelManager();
-        this.lifeManager = new LifeManager();
+        this.lifeManager = new LifeManager(3);
         this.collision = new CollisionManager();
+
+        this.waitingInput = true;
 
         this.levelManager.initialize();
 
@@ -30,9 +32,17 @@ export default class Game {
         this.start();
     }
 
-    start() {
-        requestAnimationFrame((timestamp) => this.gameLoop(timestamp));
+    resetTurn() {
+        this.player.position.x = GAME_WIDTH / 2;
+        this.player.velocity = new Vector(0, 0);
+
+        this.ball.position = new Vector(GAME_WIDTH / 2, GAME_HEIGHT / 3);
+        this.ball.velocity = new Vector(0, 0);
+
+        this.waitingInput = true;
     }
+
+    start() { requestAnimationFrame((timestamp) => this.gameLoop(timestamp)); }
 
     gameLoop(timestamp) {
         const deltaTime = (timestamp - this.lastTime) / 1000;
@@ -48,13 +58,15 @@ export default class Game {
         console.log(checkBallCollision);
 
         if (checkBallCollision) {
+            console.log("entra");
             this.lifeManager.loseLife();
 
             if (this.lifeManager.isGameOver()) {
                 console.log("GAME OVER");
                 return;
             }
-            this.ball.resetBall();
+
+            this.resetTurn();
         }
 
         if (this.levelManager.isLevelComplete()) {
@@ -63,7 +75,17 @@ export default class Game {
                 return;
             }
             this.levelManager.nextLevel();
-            this.ball.resetBall();
+            this.resetTurn();
+        }
+
+        if (this.waitingInput){
+            if (
+                this.input.isKeyDown("A") || this.input.isKeyDown("D") ||
+                this.input.isKeyDown("ARROWLEFT") || this.input.isKeyDown("ARROWRIGHT")
+            ){
+                this.waitingInput = false;
+                this.ball.randomVelocity();
+            }
         }
 
         // Clear and Draw
@@ -71,7 +93,7 @@ export default class Game {
         this.player.draw(this.renderer);
         this.ball.draw(this.renderer);
         this.levelManager.blocks.forEach(block => {
-            if (block.active) { 
+            if (block.active) {
                 block.draw(this.renderer);
             }
         })
