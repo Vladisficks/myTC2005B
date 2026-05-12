@@ -40,6 +40,8 @@ export default class Game {
             this.lifeManager
         );
 
+        this.blocksDestroyed = 0;
+
         this.lastTime = 0;
 
         this.renderer.resize();
@@ -85,6 +87,12 @@ export default class Game {
                 block.draw(this.renderer);
             }
         })
+
+        // HUD
+        this.blocksDestroyed += this.levelManager.getSumBlocks();
+        this.renderer.drawText(
+            GAME_WIDTH / 2, 100, `Blocks: ${this.blocksDestroyed}`
+        );
 
         requestAnimationFrame((timestamp) => this.gameLoop(timestamp));
     }

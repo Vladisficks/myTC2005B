@@ -49,7 +49,7 @@ export default class LevelManager {
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < cols; j++) {
                 const blockX = sidePadding + blockWidth / 2 + j * (blockWidth + gap);
-                const blockY = topPadding + 70 / 2 + i * (70 + gap); // 70 es BLOCK_HEIGHT
+                const blockY = topPadding + 70 / 2 + i * (70 + gap); 
 
                 levelBlocks.push(
                     new Block(new Vector(blockX, blockY), blockWidth, colors[i % colors.length])
@@ -73,7 +73,7 @@ export default class LevelManager {
 
     getCurrentLevel() { return this.currentLevel; }
 
-    getTotalBlocks() { return this.blocks.filter(block => block.active).length; }
+    getBlocks() { return this.blocks.filter(block => !block.active).length; }
 
     getDestroyedBlocks() { return this.blocks.filter(block => !block.active).length; }
 }

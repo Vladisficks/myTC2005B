@@ -58,4 +58,11 @@ export default class Renderer {
         this.ctx.fill();
         this.ctx.closePath();
     }
+
+    drawText(x, y, text, options = {}){
+        this.ctx.fillStyle = options.color ||  "#ffffff";
+        this.ctx.font = options.font || "60px Arial";
+        this.ctx.textAlign = options.align || "center";
+        this.ctx.fillText(text, x, y);
+    }
 }
