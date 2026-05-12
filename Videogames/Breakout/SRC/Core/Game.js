@@ -1,13 +1,11 @@
-import Ball from "../Entities/Ball.js";
-import Block from "../Entities/Block.js";
-import Player from "../Entities/Player.js";
-import CollisionManager from "../Physics/CollisionManager.js";
-import { GAME_HEIGHT, GAME_WIDTH } from "../Utils/Constants.js";
-import Vector from "../Utils/Vector.js";
+import Renderer from "./Renderer.js";
 import InputManager from "./Input.js";
+import GameStateManager from "./GameStateManager.js";
 import LevelManager from "./LevelManager.js";
 import LifeManager from "./LifeManager.js";
-import Renderer from "./Renderer.js";
+import CollisionManager from "../Physics/CollisionManager.js"
+import Player from "../Entities/Player.js";
+import Ball from "../Entities/Ball.js";
 
 export default class Game {
     constructor(canvas) {
@@ -15,9 +13,12 @@ export default class Game {
         this.input = new InputManager();
         this.levelManager = new LevelManager();
         this.lifeManager = new LifeManager(3);
-        this.collision = new CollisionManager();
-
-        this.waitingInput = true;
+        this.collisionManager = new CollisionManager();
+        this.stateManager = new GameStateManager(
+            this.player,
+            this.ball,
+            this.levelManager,
+        )
 
         this.levelManager.initialize();
 
@@ -32,15 +33,6 @@ export default class Game {
         this.start();
     }
 
-    resetTurn() {
-        this.player.position.x = GAME_WIDTH / 2;
-        this.player.velocity = new Vector(0, 0);
-
-        this.ball.position = new Vector(GAME_WIDTH / 2, GAME_HEIGHT / 3);
-        this.ball.velocity = new Vector(0, 0);
-
-        this.waitingInput = true;
-    }
 
     start() { requestAnimationFrame((timestamp) => this.gameLoop(timestamp)); }
 
@@ -51,42 +43,26 @@ export default class Game {
         // Update
         this.player.update(deltaTime);
         this.ball.update(deltaTime);
-        this.collision.update(this.player, this.ball, this.levelManager.blocks);
+        this.collisionManager.update(this.player, this.ball, this.levelManager.blocks);
 
-        // Check if ball out game
-        const checkBallCollision = this.collision.ballWall.resolve(this.ball);
-        console.log(checkBallCollision);
+        // Game States
+        const checkBallCollision = this.collisionManager.ballWall.resolve(this.ball);
 
-        if (checkBallCollision) {
-            console.log("entra");
-            this.lifeManager.loseLife();
-
-            if (this.lifeManager.isGameOver()) {
+        if (checkBallCollision){
+            if (!this.stateManager.BallOutOfBounds()){
                 console.log("GAME OVER");
                 return;
             }
-
-            this.resetTurn();
         }
 
-        if (this.levelManager.isLevelComplete()) {
-            if (this.levelManager.isGameWon()) {
+        if (this.levelManager.isLevelComplete()){
+            if(!this.stateManager.LevelComplete()){
                 console.log("GAME WON");
                 return;
             }
-            this.levelManager.nextLevel();
-            this.resetTurn();
         }
 
-        if (this.waitingInput){
-            if (
-                this.input.isKeyDown("A") || this.input.isKeyDown("D") ||
-                this.input.isKeyDown("ARROWLEFT") || this.input.isKeyDown("ARROWRIGHT")
-            ){
-                this.waitingInput = false;
-                this.ball.randomVelocity();
-            }
-        }
+        this.stateManager.update(this.input)
 
         // Clear and Draw
         this.renderer.clear();
