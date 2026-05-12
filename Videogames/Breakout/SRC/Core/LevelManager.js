@@ -76,4 +76,10 @@ export default class LevelManager {
     getBlocks() { return this.blocks.filter(block => !block.active).length; }
 
     getDestroyedBlocks() { return this.blocks.filter(block => !block.active).length; }
+
+    reset() {
+        this.currentLevel = 1;
+        this.blocks = [];
+        this.generateLevel(this.currentLevel);
+    }
 }

@@ -13,4 +13,6 @@ export default class LifeManager {
     isGameOver() { return this.currentLife <= 0; }
 
     getCurrentLives() { return this.currentLife; }
+
+    reset() { this.currentLife = this.maxLives }
 }

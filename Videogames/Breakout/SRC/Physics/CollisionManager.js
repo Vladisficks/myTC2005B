@@ -14,6 +14,5 @@ export default class CollisionManager {
     update(player, ball, blocks) {
         this.playerWall.resolve(player);
         this.playerBall.resolve(player, ball);
-        this.ballBlock.resolve(ball, blocks);
     }
 }

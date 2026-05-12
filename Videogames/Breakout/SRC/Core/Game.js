@@ -13,6 +13,7 @@ import LevelManager from "./LevelManager.js";
 import LifeManager from "./LifeManager.js";
 import Renderer from "./Renderer.js";
 import GameStateManager from "./GameStateManager.js";
+import HUDManager from "./HUDManager.js";
 
 export default class Game {
     constructor(canvas) {
@@ -40,7 +41,7 @@ export default class Game {
             this.lifeManager
         );
 
-        this.blocksDestroyed = 0;
+        this.hudManager = new HUDManager(this.levelManager, this.lifeManager, this.stateManager);
 
         this.lastTime = 0;
 
@@ -61,20 +62,13 @@ export default class Game {
         this.ball.update(deltaTime);
         this.collision.update(this.player, this.ball, this.levelManager.blocks);
 
-        const checkBallCollision = this.collision.ballWall.resolve(this.ball);
-        if (checkBallCollision) {
-            if (!this.stateManager.BallOutOfBounds()) {
-                console.log("GAME OVER");
-                return;
-            }
-        }
+        const hitBlock = this.collision.ballBlock.resolve(this.ball, this.levelManager.blocks);
+        if (hitBlock) this.hudManager.incrementBlocksDestroyed();
 
-        if (this.levelManager.isLevelComplete()) {
-            if (!this.stateManager.LevelComplete()) {
-                console.log("GAME WON");
-                return;
-            }
-        }
+        const checkBallCollision = this.collision.ballWall.resolve(this.ball);
+        if (checkBallCollision) { if (!this.stateManager.BallOutOfBounds()) { } }
+
+        if (this.levelManager.isLevelComplete()) { if (!this.stateManager.LevelComplete()) { } }
 
         this.stateManager.update(this.input);
 
@@ -83,16 +77,18 @@ export default class Game {
         this.player.draw(this.renderer);
         this.ball.draw(this.renderer);
         this.levelManager.blocks.forEach(block => {
-            if (block.active) {
-                block.draw(this.renderer);
-            }
+            if (block.active) block.draw(this.renderer);
         })
 
-        // HUD
-        this.blocksDestroyed += this.levelManager.getSumBlocks();
-        this.renderer.drawText(
-            GAME_WIDTH / 2, 100, `Blocks: ${this.blocksDestroyed}`
-        );
+        if (this.stateManager.isGameActive() || this.stateManager.getGameState() === "waiting") {
+            this.player.draw(this.renderer);
+            this.ball.draw(this.renderer);
+            this.levelManager.blocks.forEach(block => {
+                if (block.active) block.draw(this.renderer);
+            })
+        }
+
+        this.hudManager.draw(this.renderer);
 
         requestAnimationFrame((timestamp) => this.gameLoop(timestamp));
     }
