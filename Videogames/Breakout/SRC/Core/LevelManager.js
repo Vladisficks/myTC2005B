@@ -1,52 +1,79 @@
 import Block from "../Entities/Block.js";
-import { BLOCK_HEIGHT, GAME_WIDTH, MAX_LEVEL } from "../Utils/Constants.js";
+import { GAME_WIDTH, MAX_LEVEL } from "../Utils/Constants.js";
 import Vector from "../Utils/Vector.js";
 
+// Configuración de niveles externalizad
+const LEVEL_CONFIGS = [
+    {
+        rows: 3,
+        blockWidth: null, // Calculado automáticamente
+        colors: ["#d80e0e", "#d86602", "#ffdb0c"]
+    },
+    {
+        rows: 4,
+        blockWidth: null,
+        colors: ["#d80e0e", "#d86602", "#ffdb0c", "#089c28"]
+    },
+    {
+        rows: 5,
+        blockWidth: null,
+        colors: ["#d80e0e", "#d86602", "#ffdb0c", "#089c28", "#1155e9"]
+    }
+];
+
 export default class LevelManager {
-    constructor() {
+    constructor(levelConfigs = LEVEL_CONFIGS) {
         this.currentLevel = 1;
         this.blocks = [];
+        this.levelConfigs = levelConfigs;
     }
 
     initialize() { this.generateLevel(this.currentLevel); }
 
     generateLevel(levelNumber) {
-        const row = 2 + levelNumber;
-        const col = 6;
+        const config = this.levelConfigs[levelNumber - 1];
+        const rows = config.rows;
+        const cols = 6;
 
         const sidePadding = 150;
         const topPadding = 150;
         const gap = 5;
 
         const availableWidth = GAME_WIDTH - sidePadding * 2;
-        const totalGapWidth = gap * (col - 1);
+        const totalGapWidth = gap * (cols - 1);
+        const blockWidth = (availableWidth - totalGapWidth) / cols;
 
-        const blockWidth = (availableWidth - totalGapWidth) / col;
+        const levelBlocks = [];
+        const colors = config.colors;
 
-        const levelBlocks = []
-        const colorsBlocks = ["#d80e0e", "#d86602", "#ffdb0c", "#089c28", "#1155e9"]
-
-        for (let i = 0; i < row; i++) {
-            for (let j = 0; j < 6; j++) {
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
                 const blockX = sidePadding + blockWidth / 2 + j * (blockWidth + gap);
-                const blockY = topPadding + BLOCK_HEIGHT / 2 + i * (BLOCK_HEIGHT + gap);
+                const blockY = topPadding + 70 / 2 + i * (70 + gap); // 70 es BLOCK_HEIGHT
 
                 levelBlocks.push(
-                    new Block(new Vector(blockX, blockY), blockWidth, colorsBlocks[i])
+                    new Block(new Vector(blockX, blockY), blockWidth, colors[i % colors.length])
                 );
             }
         }
+
         this.blocks = levelBlocks;
     }
 
     isLevelComplete() { return this.blocks.every(block => !block.active); }
 
     nextLevel() {
-        if (!this.isGameWon()){
+        if (!this.isGameWon()) {
             this.currentLevel++;
             this.generateLevel(this.currentLevel);
         }
     }
 
     isGameWon() { return this.currentLevel >= MAX_LEVEL; }
+
+    getCurrentLevel() { return this.currentLevel; }
+
+    getTotalBlocks() { return this.blocks.filter(block => block.active).length; }
+
+    getDestroyedBlocks() { return this.blocks.filter(block => !block.active).length; }
 }

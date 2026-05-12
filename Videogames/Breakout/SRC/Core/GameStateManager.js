@@ -1,3 +1,6 @@
+import { GAME_HEIGHT, GAME_WIDTH } from "../Utils/Constants.js";
+import Vector from "../Utils/Vector.js";
+
 export default class GameStateManager {
     constructor(player, ball, levelManager, lifeManager) {
         this.player = player;
