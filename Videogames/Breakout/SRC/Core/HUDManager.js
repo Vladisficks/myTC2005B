@@ -1,4 +1,4 @@
-import { GAME_WIDTH } from "../Utils/Constants.js";
+import { GAME_HEIGHT, GAME_WIDTH } from "../Utils/Constants.js";
 
 export default class HUDManager {
     constructor(levelManager, lifeManager, gameStateManager) {
@@ -43,15 +43,15 @@ export default class HUDManager {
         this.drawGameHUD(renderer);
 
         renderer.drawText(
-            GAME_WIDTH / 2, 500, "`VICTORY`", { font: "120px Arial", color: "#ff0000" }
+            GAME_WIDTH / 2, GAME_HEIGHT / 2, "`VICTORY`", { font: "120px Arial", color: "#fffb03" }
         );
 
         renderer.drawText(
-            GAME_WIDTH / 2, 700, "Move to try again", { font: "40px Arial", color: "#ffffff" }
+            GAME_WIDTH / 2, GAME_HEIGHT / 2 + 100, "Move to try again", { font: "40px Arial", color: "#ffffff" }
         );
 
         renderer.drawText(
-            GAME_WIDTH / 2, 750, `Total Blocks Destroyed: ${this.blocksDestroyed}`, { font: "30px Arial", color: "#cccccc" }
+            GAME_WIDTH / 2, GAME_HEIGHT / 2 + 150, `Total Blocks Destroyed: ${this.blocksDestroyed}`, { font: "30px Arial", color: "#cccccc" }
         );
     }
 
@@ -60,15 +60,15 @@ export default class HUDManager {
         this.drawGameHUD(renderer);
 
         renderer.drawText(
-            GAME_WIDTH / 2, 500, "GAME OVER", { font: "120px Arial", color: "#c6c30e" }
+            GAME_WIDTH / 2, GAME_HEIGHT / 2, "GAME OVER", { font: "120px Arial", color: "#ff0000" }
         );
 
         renderer.drawText(
-            GAME_WIDTH / 2, 700, "Move to try again", { font: "40px Arial", color: "#ffffff" }
+            GAME_WIDTH / 2, GAME_HEIGHT / 2 + 100, "Move to try again", { font: "60px Arial", color: "#ffffff" }
         );
 
         renderer.drawText(
-            GAME_WIDTH / 2, 750, `Total Blocks Destroyed: ${this.blocksDestroyed}`, { font: "30px Arial", color: "#cccccc" }
+            GAME_WIDTH / 2, GAME_HEIGHT / 2 + 150, `Total Blocks Destroyed: ${this.blocksDestroyed}`, { font: "40px Arial", color: "#cccccc" }
         );
     }
 

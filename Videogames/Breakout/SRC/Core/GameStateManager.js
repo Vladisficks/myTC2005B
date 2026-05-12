@@ -1,4 +1,4 @@
-import { GAME_HEIGHT, GAME_WIDTH } from "../Utils/Constants.js";
+import { END_COOLDOWN_TIME, GAME_HEIGHT, GAME_WIDTH } from "../Utils/Constants.js";
 import Vector from "../Utils/Vector.js";
 import LevelManager from "./LevelManager.js";
 import LifeManager from "./LifeManager.js";
@@ -12,6 +12,9 @@ export default class GameStateManager {
 
         this.waitingInput = true;
         this.gameState = "waiting";
+
+        this.endCoolDown = 0
+        this.END_COOLDOWN_TIME = END_COOLDOWN_TIME;
     }
 
     resetGame() {
@@ -32,30 +35,6 @@ export default class GameStateManager {
         this.gameState = "waiting";
     }
 
-    BallOutOfBounds() {
-        this.lifeManager.loseLife();
-
-        if (this.lifeManager.isGameOver()) {
-            console.log(this.gameState);
-            this.gameState = "gameOver";
-            return false;
-        }
-
-        this.resetTurn();
-        return true;
-    }
-
-    LevelComplete() {
-        if (this.levelManager.isGameWon()) {
-            this.gameState = "gameWon";
-            return false;
-        }
-
-        this.levelManager.nextLevel();
-        this.resetTurn();
-        return true;
-    }
-
     PlayerInputStart(input) {
         if (this.waitingInput) {
             if (
@@ -69,15 +48,50 @@ export default class GameStateManager {
         }
     }
 
-    update(input) {
+    update(input, deltaTime) {
         if (this.gameState === "waiting") {
             this.PlayerInputStart(input);
         } else if (this.gameState === "playing") {
-
+            // nothing
         } else if (this.gameState === "gameOver" || this.gameState === "gameWon") {
-            this.PlayerInputStart(input);
-            if (!this.waitingInput) this.resetGame();
+
+            if (this.endCoolDown > 0) {
+                this.endCoolDown -= deltaTime;
+                return;
+            }
+
+            if (
+                input.isKeyJustPressed("A") || input.isKeyJustPressed("D") ||
+                input.isKeyJustPressed("ARROWLEFT") || input.isKeyJustPressed("ARROWRIGHT")
+            ) {
+                this.resetGame();
+            }
         }
+    }
+
+    BallOutOfBounds() {
+        this.lifeManager.loseLife();
+
+        if (this.lifeManager.isGameOver()) {
+            this.gameState = "gameOver";
+            this.endCoolDown = this.END_COOLDOWN_TIME;
+            return false;
+        }
+
+        this.resetTurn();
+        return true;
+    }
+
+    LevelComplete() {
+        if (this.levelManager.isGameWon()) {
+            this.gameState = "gameWon";
+            this.endCoolDown = this.END_COOLDOWN_TIME;
+            return false;
+        }
+
+        this.levelManager.nextLevel();
+        this.resetTurn();
+        return true;
     }
 
     isGameActive() { return this.gameState === "playing"; }

@@ -58,37 +58,38 @@ export default class Game {
         this.lastTime = timestamp;
 
         // Update
-        this.player.update(deltaTime);
-        this.ball.update(deltaTime);
-        this.collision.update(this.player, this.ball, this.levelManager.blocks);
+        this.stateManager.update(this.input, deltaTime);
 
-        const hitBlock = this.collision.ballBlock.resolve(this.ball, this.levelManager.blocks);
-        if (hitBlock) this.hudManager.incrementBlocksDestroyed();
+        if (this.stateManager.isGameActive()) {
+            this.player.update(deltaTime);
+            this.ball.update(deltaTime);
 
-        const checkBallCollision = this.collision.ballWall.resolve(this.ball);
-        if (checkBallCollision) { if (!this.stateManager.BallOutOfBounds()) { } }
+            this.collision.update(this.player, this.ball, this.levelManager.blocks);
 
-        if (this.levelManager.isLevelComplete()) { if (!this.stateManager.LevelComplete()) { } }
+            const hitBlock = this.collision.ballBlock.resolve(this.ball, this.levelManager.blocks);
+            if (hitBlock) this.hudManager.incrementBlocksDestroyed();
 
-        this.stateManager.update(this.input);
+            const ballOut = this.collision.ballWall.resolve(this.ball);
+            if (ballOut) this.stateManager.BallOutOfBounds();
 
-        // Clear and Draw
+            if (this.levelManager.isLevelComplete()) this.stateManager.LevelComplete();
+        }
+
+        // Draw (only once)
         this.renderer.clear();
-        this.player.draw(this.renderer);
-        this.ball.draw(this.renderer);
-        this.levelManager.blocks.forEach(block => {
-            if (block.active) block.draw(this.renderer);
-        })
 
-        if (this.stateManager.isGameActive() || this.stateManager.getGameState() === "waiting") {
+        const state = this.stateManager.getGameState();
+        if (state === "playing" || state === "waiting") {
             this.player.draw(this.renderer);
             this.ball.draw(this.renderer);
             this.levelManager.blocks.forEach(block => {
                 if (block.active) block.draw(this.renderer);
-            })
+            });
         }
 
         this.hudManager.draw(this.renderer);
+
+        this.input.flush();
 
         requestAnimationFrame((timestamp) => this.gameLoop(timestamp));
     }
