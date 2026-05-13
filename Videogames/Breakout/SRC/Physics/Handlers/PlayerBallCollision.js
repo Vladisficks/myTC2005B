@@ -8,7 +8,7 @@ export default class PlayerBallCollision extends Collision {
     }
 
     resolve(player, ball) {
-        if (!this.rectCollision(player.getBounds(), ball.getBounds())) return;
+        if (!this.rectCollision(player.getBounds(), ball.getBounds())) return false;
 
         const currentSpeed = ball.velocity.magnitude();
 
@@ -32,5 +32,7 @@ export default class PlayerBallCollision extends Collision {
         if (currentSpeed > this.maxSpeed){
             ball.velocity = ball.velocity.times(this.maxSpeed / newSpeed);
         }
+
+        return true;
     }
 }

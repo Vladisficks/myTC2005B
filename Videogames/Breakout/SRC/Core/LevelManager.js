@@ -2,7 +2,6 @@ import Block from "../Entities/Block.js";
 import { GAME_WIDTH, MAX_LEVEL } from "../Utils/Constants.js";
 import Vector from "../Utils/Vector.js";
 
-// Configuración de niveles externalizad
 const LEVEL_CONFIGS = [
     {
         rows: 3,

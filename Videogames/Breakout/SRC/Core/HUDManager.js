@@ -47,11 +47,11 @@ export default class HUDManager {
         );
 
         renderer.drawText(
-            GAME_WIDTH / 2, GAME_HEIGHT / 2 + 100, "Move to try again", { font: "40px Arial", color: "#ffffff" }
+            GAME_WIDTH / 2, GAME_HEIGHT / 2 + 100, "Move to try again", { font: "80px Arial", color: "#ffffff" }
         );
 
         renderer.drawText(
-            GAME_WIDTH / 2, GAME_HEIGHT / 2 + 150, `Total Blocks Destroyed: ${this.blocksDestroyed}`, { font: "30px Arial", color: "#cccccc" }
+            GAME_WIDTH / 2, GAME_HEIGHT / 2 + 170, `Total Blocks Destroyed: ${this.blocksDestroyed}`, { font: "50px Arial", color: "#cccccc" }
         );
     }
 
@@ -64,13 +64,13 @@ export default class HUDManager {
         );
 
         renderer.drawText(
-            GAME_WIDTH / 2, GAME_HEIGHT / 2 + 100, "Move to try again", { font: "60px Arial", color: "#ffffff" }
+            GAME_WIDTH / 2, GAME_HEIGHT / 2 + 100, "Move to try again", { font: "80px Arial", color: "#ffffff" }
         );
 
         renderer.drawText(
-            GAME_WIDTH / 2, GAME_HEIGHT / 2 + 150, `Total Blocks Destroyed: ${this.blocksDestroyed}`, { font: "40px Arial", color: "#cccccc" }
+            GAME_WIDTH / 2, GAME_HEIGHT / 2 + 170, `Total Blocks Destroyed: ${this.blocksDestroyed}`, { font: "50px Arial", color: "#cccccc" }
         );
     }
 
-    reset() { this.blocksDestroyed = 0; }
+    static reset() { this.blocksDestroyed = 0; }
 }
