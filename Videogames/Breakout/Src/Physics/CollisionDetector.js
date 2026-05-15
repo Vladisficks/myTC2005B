@@ -1,11 +1,11 @@
 export default class CollisionDetector {
     static overlaps(boundsA, boundsB) {
         return (
-            boundsA.left <= boundsB.right &&
-            boundsA.right >= boundsB.left &&
-            boundsA.top <= boundsB.bottom &&
-            boundsA.bottom >= boundsB.top
-        )
+            boundsA.left < boundsB.right &&
+            boundsA.right > boundsB.left &&
+            boundsA.top < boundsB.bottom &&
+            boundsA.bottom > boundsB.top
+        );
     }
 
     static getOverlap(boundsA, boundsB) {

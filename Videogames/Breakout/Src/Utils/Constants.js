@@ -18,6 +18,14 @@ export const BALL_CONFIG = {
     SPEED:  700
 };
 
+// EVIL BALL
+export const EVIL_BALL_CONFIG = {
+    WIDTH:  30,
+    HEIGHT: 30,
+    COLOR:  "#d71717",
+    SPEED:  500
+};
+
 // BLOCKS
 export const BLOCK_CONFIG = {
     COLS:         6,

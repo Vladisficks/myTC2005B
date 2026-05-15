@@ -7,7 +7,15 @@ export default class CollisionDispatcher {
         this.#pairs = [];
     }
 
-    register(entityA, targets, response, type, condition = null) { this.#pairs.push({ entityA, targets, response, type }); }
+    register(entityA, targets, response, type, condition = null) {
+        this.#pairs.push({
+            entityA,
+            targets,
+            response,
+            type,
+            condition
+        });
+    }
 
     dispatch() {
         const events = [];

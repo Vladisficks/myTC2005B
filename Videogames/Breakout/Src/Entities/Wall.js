@@ -8,7 +8,7 @@ export default class Wall extends GameObject{
     }
 
     static createBounds(gameWidth, gameHeight){
-        const thickness = 50;
+        const thickness = 200;
 
         return {
             left: new Wall(-thickness / 2, gameHeight / 2, thickness, gameHeight, "left"),

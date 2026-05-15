@@ -2,18 +2,31 @@ import CollisionResponse from "./CollisionResponse.js";
 
 export default class BounceResponse extends CollisionResponse {
     resolve(event) {
-        const entity = event.entityA;
-        const { x: overlapX, y: overlapY } = event.overlap;
+        const ball = event.entityA;
+        const wall = event.entityB;
 
-        const dx = event.entityA.position.x - event.entityB.position.x;
-        const dy = event.entityA.position.y - event.entityB.position.y;
+        const ballBounds = ball.getBounds();
+        const wallBounds = wall.getBounds();
+
+        const overlapX = event.overlap.x;
+        const overlapY = event.overlap.y;
 
         if (overlapX < overlapY) {
-            entity.velocity.x *= -1;
-            entity.position.x += dx > 0 ? overlapX : -overlapX;
-        } else {
-            entity.velocity.y *= -1;
-            entity.position.y += dy > 0 ? overlapY : -overlapY;
+
+            // LEFT WALL
+            if (ballBounds.left < wallBounds.left) { ball.position.x -= overlapX; }
+
+            // RIGHT WALL
+            else { ball.position.x += overlapX; }
+            ball.velocity.x *= -1;
+        }
+        else {
+            // TOP WALL
+            if (ballBounds.top < wallBounds.top) { ball.position.y -= overlapY; }
+
+            // BOTTOM HIT
+            else { ball.position.y += overlapY; }
+            ball.velocity.y *= -1;
         }
     }
 }
