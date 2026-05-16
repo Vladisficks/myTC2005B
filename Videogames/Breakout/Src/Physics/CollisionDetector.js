@@ -1,4 +1,5 @@
 export default class CollisionDetector {
+    // Return false if a objectA touch objetcB
     static overlaps(boundsA, boundsB) {
         return (
             boundsA.left < boundsB.right &&
@@ -8,6 +9,7 @@ export default class CollisionDetector {
         );
     }
 
+    // How much are objects overlaping
     static getOverlap(boundsA, boundsB) {
         const overlapX = Math.min(boundsA.right, boundsB.right) - Math.max(boundsA.left, boundsB.left);
         const overlapY = Math.min(boundsA.bottom, boundsB.bottom) - Math.max(boundsA.top, boundsB.top);

@@ -4,12 +4,14 @@ export default class AudioManager {
         this.masterVolume = 0.5;
     }
 
+    // Load one sound from a file and save a name
     loadSound(name, path) {
         const audio = new Audio(path);
         audio.volume = this.masterVolume;
         this.sounds[name] = audio;
     }
 
+    // Play a sound by its name
     playSound(name) {
         if (!this.sounds[name]) {
             console.warn(`Sonido "${name}" no cargado`);
@@ -23,6 +25,7 @@ export default class AudioManager {
         });
     }
 
+    // Change the volume of all sounds
     setVolume(volume) {
         this.masterVolume = Math.max(0, Math.min(1, volume));
 
@@ -31,6 +34,7 @@ export default class AudioManager {
         });
     }
 
+    // Stop all sounds
     stopAll() {
         Object.values(this.sounds).forEach(audio => {
             audio.pause();

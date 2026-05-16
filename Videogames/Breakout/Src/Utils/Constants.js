@@ -1,8 +1,8 @@
-// CANVAS
+// CANVAS - World game size
 export const GAME_WIDTH  = 1280;
 export const GAME_HEIGHT = 1920;
 
-// PLAYER
+// PLAYER 
 export const PLAYER_CONFIG = {
     WIDTH:  250,
     HEIGHT: 40,
@@ -26,7 +26,7 @@ export const EVIL_BALL_CONFIG = {
     SPEED:  800
 };
 
-// BLOCKS
+// BLOCKS - Grid layout
 export const BLOCK_CONFIG = {
     COLS:         6,
     HEIGHT:       70,
@@ -35,7 +35,7 @@ export const BLOCK_CONFIG = {
     GAP:          5
 };
 
-// GAME
+// GAME RULES
 export const GAME_CONFIG = {
     LIVES:        3,
     END_COOLDOWN: 1,

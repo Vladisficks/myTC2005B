@@ -7,10 +7,12 @@ export default class Renderer {
         this.width = canvas.width = width;
         this.height = canvas.height = height;
 
+        // Resize the window when user do
         window.addEventListener("resize", () => { this.resize(); });
         this.resize();
     }
 
+    // Fill the whole canvas and clear previus freame
     clear() {
         this.ctx.fillStyle = "#000000";
         this.ctx.fillRect(0, 0, this.width, this.height);
@@ -36,12 +38,14 @@ export default class Renderer {
         this.ctx.fillText(text, x, y);
     }
 
+    // Canvas keeps internal size, but CSS size changes so the game fits on screen
     resize() {
         const parent = this.canvas.parentElement;
 
         const availableWidth = parent.clientWidth;
         const availableHeight = parent.clientHeight * 0.90;
 
+        // Takes smaller scale for respet the aspect ratio 2:3
         const scale = Math.min(
             availableWidth / this.width,
             availableHeight / this.height

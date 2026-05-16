@@ -8,9 +8,11 @@ export default class GameStateManager {
         this.levelManager = levelManager;
         this.lifeManager = lifeManager;
 
+        // A small time before player can restart a game after game over
         this.endCooldownTime = gameConfig.END_COOLDOWN;
         this.endCooldown = 0;
 
+        // Time before Evil Ball spawn in the game
         this.evilBallRespawnTime = gameConfig.EVIL_BALL_RESPAWN;
         this.evilBallTimer = 0;
 
@@ -22,6 +24,7 @@ export default class GameStateManager {
     }
 
     update(wantsAction, deltaTime) {
+        // Game is waiting, so we can start
         if (this.gameState === "waiting") {
             if (wantsAction) this.#startRound();
         } else if (this.gameState === "gameOver" || this.gameState === "gameWon") {
@@ -35,6 +38,7 @@ export default class GameStateManager {
                 this.evilBallTimer -= deltaTime;
                 return;
             }
+            // Countdown of Evil Ball. Game is playing
             if (!this.evilBall.active) {
                 console.log("activa spawnEvilBall");
                 this.#spawnEvilBall();

@@ -1,7 +1,7 @@
 export default class InputManager {
     constructor() {
-        this.keys = {};
-        this.justPressed = {};
+        this.keys = {};             // Keys pressed right now
+        this.justPressed = {};      // Keys that were pressed in this frame
 
         this.#setupListeners();
     }
@@ -18,9 +18,11 @@ export default class InputManager {
 
     flush() { this.justPressed = {}; }
 
+    // Listen the keyboard 
     #setupListeners() {
         window.addEventListener("keydown", (event) => {
             const key = event.key.toUpperCase();
+            // If it was not down before, mark it as just pressed
             if (!this.keys[key]) this.justPressed[key] = true;
             this.keys[key] = true;
         });

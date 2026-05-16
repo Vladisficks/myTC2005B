@@ -79,12 +79,14 @@ export default class Breakout {
     }
 
     update(deltaTime) {
+        // Use to start / restart the game
         const wantsAction =
             this.inputManager.isKeyDown("A") || this.inputManager.isKeyDown("D") ||
             this.inputManager.isKeyDown("ARROWLEFT") || this.inputManager.isKeyDown("ARROWRIGHT");
 
         this.state.update(wantsAction, deltaTime);
 
+        // Only update if the game is active
         if (this.state.isGameActive()) {
             this.player.update(deltaTime);
             this.ball.update(deltaTime);
@@ -92,6 +94,7 @@ export default class Breakout {
 
             const events = this.dispatcher.dispatch();
 
+            // Actions collisions 
             for (const event of events) {
                 if (event.type === "ballExit" || event.type === "evilvsPlayer") this.state.playerLosesLife();
                 if (event.type === "ballVSBlock") { this.score.addBlock(); this.audio.playSound("hit"); }
