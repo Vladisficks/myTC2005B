@@ -1,14 +1,19 @@
 import Vector from "../Utils/Vector.js";
 
 export default class GameStateManager {
-    constructor(player, ball, levelManager, lifeManager, gameConfig, gameWidth, gameHeight, onReset = null) {
+    constructor(player, ball, evilBall, levelManager, lifeManager, gameConfig, gameWidth, gameHeight, onReset = null) {
         this.player = player;
         this.ball = ball;
+        this.evilBall = evilBall;
         this.levelManager = levelManager;
         this.lifeManager = lifeManager;
 
         this.endCooldownTime = gameConfig.END_COOLDOWN;
         this.endCooldown = 0;
+
+        this.evilBallRespawnTime = gameConfig.EVIL_BALL_RESPAWN;
+        this.evilBallTimer = 0;
+
         this.gameWidth = gameWidth;
         this.gameHeight = gameHeight;
         this.onReset = onReset;
@@ -19,17 +24,25 @@ export default class GameStateManager {
     update(wantsAction, deltaTime) {
         if (this.gameState === "waiting") {
             if (wantsAction) this.#startRound();
-
         } else if (this.gameState === "gameOver" || this.gameState === "gameWon") {
             if (this.endCooldown > 0) {
                 this.endCooldown -= deltaTime;
                 return;
             }
             if (wantsAction) this.resetGame();
+        } else {
+            if (this.evilBallTimer > 0) {
+                this.evilBallTimer -= deltaTime;
+                return;
+            }
+            if (!this.evilBall.active) {
+                console.log("activa spawnEvilBall");
+                this.#spawnEvilBall();
+            }
         }
     }
 
-    ballOutOfBounds() {
+    playerLosesLife() {
         this.lifeManager.loseLife();
 
         if (this.lifeManager.isGameOver()) {
@@ -57,7 +70,13 @@ export default class GameStateManager {
         this.player.velocity = Vector.zero();
 
         this.ball.position = new Vector(this.gameWidth / 2, this.gameHeight / 3);
+        this.ball.speed = this.levelManager.getCurrentBallSpeed();
         this.ball.velocity = Vector.zero();
+
+        this.evilBall.active = false;
+        this.evilBall.position = new Vector(this.gameWidth / 2, this.gameHeight / 3);
+        this.evilBall.velocity = Vector.zero();
+        this.evilBallTimer = this.evilBallRespawnTime;
 
         this.gameState = "waiting";
     }
@@ -74,6 +93,18 @@ export default class GameStateManager {
 
     #startRound() {
         this.ball.randomVelocity();
+        this.ball.speed = this.levelManager.getCurrentBallSpeed();
         this.gameState = "playing";
+
+        this.evilBall.active = false; // Evil Ball desaparece
+        this.evilBall.velocity = Vector.zero();
+        this.evilBallTimer = this.evilBallRespawnTime; // Evil Ball timer sets in 5s 
+    }
+
+    #spawnEvilBall() {
+        this.evilBall.active = true;
+        this.evilBall.speed = this.levelManager.getCurrentEvilBallSpeed();
+        this.evilBall.position = new Vector(this.gameWidth / 2, this.gameHeight / 3);
+        this.evilBall.randomVelocity();
     }
 }

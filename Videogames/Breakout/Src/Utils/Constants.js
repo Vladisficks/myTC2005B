@@ -15,7 +15,7 @@ export const BALL_CONFIG = {
     WIDTH:  30,
     HEIGHT: 30,
     COLOR:  "#ffffff",
-    SPEED:  700
+    SPEED:  600
 };
 
 // EVIL BALL
@@ -23,7 +23,7 @@ export const EVIL_BALL_CONFIG = {
     WIDTH:  30,
     HEIGHT: 30,
     COLOR:  "#d71717",
-    SPEED:  500
+    SPEED:  800
 };
 
 // BLOCKS
@@ -38,7 +38,8 @@ export const BLOCK_CONFIG = {
 // GAME
 export const GAME_CONFIG = {
     LIVES:        3,
-    END_COOLDOWN: 1
+    END_COOLDOWN: 1,
+    EVIL_BALL_RESPAWN: 5
 };
 
 // HUD
@@ -58,14 +59,20 @@ export const DISPLAY_CONFIG = {
 export const LEVEL_CONFIG = [
     {
         rows:   3,
-        colors: ["#d80e0e", "#d86602", "#ffdb0c"]
+        colors: ["#d80e0e", "#d86602", "#ffdb0c"],
+        ballSpeed: 800,
+        evilBallSpeed: 700
     },
     {
         rows:   4,
-        colors: ["#d80e0e", "#d86602", "#ffdb0c", "#089c28"]
+        colors: ["#d80e0e", "#d86602", "#ffdb0c", "#089c28"],
+        ballSpeed: 1000,
+        evilBallSpeed: 800
     },
     {
         rows:   5,
-        colors: ["#d80e0e", "#d86602", "#ffdb0c", "#089c28", "#1155e9"]
+        colors: ["#d80e0e", "#d86602", "#ffdb0c", "#089c28", "#1155e9"],
+        ballSpeed: 1200,
+        evilBallSpeed: 900
     }
 ];

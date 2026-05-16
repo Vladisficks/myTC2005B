@@ -19,32 +19,35 @@ import {
     GAME_WIDTH, GAME_HEIGHT,
     PLAYER_CONFIG, BALL_CONFIG,
     BLOCK_CONFIG, GAME_CONFIG,
-    DISPLAY_CONFIG, LEVEL_CONFIG
+    DISPLAY_CONFIG, LEVEL_CONFIG,
+    EVIL_BALL_CONFIG
 } from "../Utils/Constants.js";
 import AudioManager from "../Audio/AudioManager.js";
+import EvilBall from "../Entities/EvilBall.js";
 
 export default class Breakout {
     constructor(canvas) {
-        // Core
+        // CORE GAME
         this.renderer = new Renderer(canvas, GAME_WIDTH, GAME_HEIGHT);
         this.inputManager = new InputManager();
         this.lastTime = 0;
 
-        // Audio
+        // AUDIO
         this.audio = new AudioManager();
         this.audio.loadSound("hit", "Assets/Audio/ballCollision.wav");
 
-        // Entities
+        // ENTITIES
         this.player = new Player(new Vector(GAME_WIDTH / 2, GAME_HEIGHT * 0.9), this.inputManager, PLAYER_CONFIG);
         this.ball = new Ball(new Vector(GAME_WIDTH / 2, GAME_HEIGHT / 3), BALL_CONFIG);
+        this.evilBall = new EvilBall(new Vector(GAME_WIDTH / 2, GAME_HEIGHT / 3), EVIL_BALL_CONFIG);
         this.walls = Wall.createBounds(GAME_WIDTH, GAME_HEIGHT);
 
-        // Managers
+        // MANAGERS
         this.score = new ScoreManager();
         this.lives = new LifeManager(GAME_CONFIG.LIVES);
         this.levels = new LevelManager(LEVEL_CONFIG, BLOCK_CONFIG, GAME_WIDTH);
         this.state = new GameStateManager(
-            this.player, this.ball, this.levels, this.lives,
+            this.player, this.ball, this.evilBall, this.levels, this.lives,
             GAME_CONFIG, GAME_WIDTH, GAME_HEIGHT,
             () => this.score.reset()
         );
@@ -53,18 +56,24 @@ export default class Breakout {
             DISPLAY_CONFIG, GAME_WIDTH, GAME_HEIGHT
         );
 
-        // Collisions
+        // COLLISIONS
         this.dispatcher = new CollisionDispatcher();
 
+        // Ball Collisions
         this.dispatcher.register(this.ball, [this.walls.left, this.walls.right, this.walls.top], new BounceResponse(), "ballVSWall");
         this.dispatcher.register(this.ball, this.walls.bottom, new ExitResponse(), "ballExit");
-        this.dispatcher.register(this.player, [this.walls.left, this.walls.right], new ClampResponse(), "playerVSWall");
         this.dispatcher.register(this.ball, this.player, new PaddleReflectResponse(), "ballVSPlayer");
-        this.dispatcher.register(this.ball, this.levels.blocks, new BlockDestroyResponse(), "ballVSBlock",
-            () => this.state.isGameActive()
-        );
+        this.dispatcher.register(this.ball, this.levels.blocks, new BlockDestroyResponse(), "ballVSBlock", () => this.state.isGameActive());
 
-        // Init
+        // Player Colliions
+        this.dispatcher.register(this.player, [this.walls.left, this.walls.right], new ClampResponse(), "playerVSWall");
+
+        // Evil Ball Collisions
+        this.dispatcher.register(this.evilBall, [this.walls.left, this.walls.right, this.walls.top, this.walls.bottom], new BounceResponse(), "evillVSWall", () => this.state.isGameActive());
+        this.dispatcher.register(this.evilBall, this.levels.blocks, new BounceResponse(), "evilBalvsBlock", () => this.state.isGameActive());
+        this.dispatcher.register(this.evilBall, this.player, new ExitResponse(), "evilvsPlayer");
+
+        // INIT
         this.levels.initialize();
         this.#start();
     }
@@ -79,11 +88,12 @@ export default class Breakout {
         if (this.state.isGameActive()) {
             this.player.update(deltaTime);
             this.ball.update(deltaTime);
+            this.evilBall.update(deltaTime);
 
             const events = this.dispatcher.dispatch();
 
             for (const event of events) {
-                if (event.type === "ballExit") this.state.ballOutOfBounds();
+                if (event.type === "ballExit" || event.type === "evilvsPlayer") this.state.playerLosesLife();
                 if (event.type === "ballVSBlock") { this.score.addBlock(); this.audio.playSound("hit"); }
                 if (event.type === "ballVSWall") this.audio.playSound("hit");
                 if (event.type == "ballVSPlayer") this.audio.playSound("hit");
@@ -103,6 +113,7 @@ export default class Breakout {
         if (state === "playing" || state === "waiting") {
             this.player.draw(this.renderer);
             this.ball.draw(this.renderer);
+            this.evilBall.draw(this.renderer);
             this.levels.blocks.forEach(b => { if (b.active) b.draw(this.renderer); });
         }
 

@@ -8,7 +8,7 @@ export default class LevelManager {
         this.gameWidth = gameWidth;
 
         this.currentLevel = 1;
-        this.blocks = []; 
+        this.blocks = [];
     }
 
     initialize() { this.generateLevel(this.currentLevel); }
@@ -36,6 +36,8 @@ export default class LevelManager {
     isLastLevel() { return this.currentLevel >= this.levelConfigs.length; }
     getCurrentLevel() { return this.currentLevel; }
     getDestroyedBlocks() { return this.blocks.filter(b => !b.active).length; }
+    getCurrentBallSpeed() { return this.levelConfigs[this.currentLevel - 1].ballSpeed; }
+    getCurrentEvilBallSpeed() { return this.levelConfigs[this.currentLevel - 1].evilBallSpeed; }
 
     nextLevel() {
         this.currentLevel++;
